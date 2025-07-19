@@ -7,7 +7,7 @@ const { Pool } = pg;
 
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL, // Use an environment variable for security
+    connectionString: process.env.DATABASE_URLS, // Use an environment variable for security
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
