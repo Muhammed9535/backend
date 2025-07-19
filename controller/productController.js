@@ -1,4 +1,4 @@
-import pool from "../config/eccormerceModel.js";
+import db from "../config/eccormerceModel.js";
 import fs from 'fs'
 import { v2 as cloudinary } from 'cloudinary';
 
@@ -25,7 +25,7 @@ const addProduct = async (req, res) => {
                 const prodImg = result.secure_url; // Get Cloudinary URL
                 // Insert product into PostgreSQL
                 try {
-                    const dbResult = await pool.query(
+                    const dbResult = await db.query(
                         "INSERT INTO products (prodimg, prodname, prodprice, prodcategory) VALUES ($1, $2, $3, $4) RETURNING *",
                         [prodImg, prodName, prodPrice, prodCategory]
                     );
@@ -52,7 +52,7 @@ const addProduct = async (req, res) => {
 const removeProduct = async (req, res) => {
     try {
 
-        const result = await pool.query("DELETE FROM products WHERE id = $1 RETURNING *", [req.body.id])
+        const result = await db.query("DELETE FROM products WHERE id = $1 RETURNING *", [req.body.id])
 
 
         fs.unlink(`uploads/${result.rows[0].prodimg}`, () => {
@@ -71,7 +71,7 @@ const removeProduct = async (req, res) => {
 
 const listProduct = async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM products");
+        const result = await db.query("SELECT * FROM products");
         res.json({ success: true, productlist: result.rows })
     } catch (error) {
         console.log(error)

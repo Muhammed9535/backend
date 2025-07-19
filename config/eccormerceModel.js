@@ -2,13 +2,14 @@ import pg from "pg";
 import "dotenv/config"
 
 
-const { Pool } = pg;
 
 
+const db = new pg.Client({
+    user: "postgres",
+    host: "localhost",
+    database: "Exclusive Eccomerce",
+    password: "Lahnreey",
+    port: 4000,
+})
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URLS, // Use an environment variable for security
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-});
-
-export default pool;
+export default db;

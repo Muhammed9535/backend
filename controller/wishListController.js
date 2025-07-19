@@ -1,8 +1,8 @@
-import pool from "../config/eccormerceModel.js"
+import db from "../config/eccormerceModel.js"
 
 const addToWishList = async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.id])
+        const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
         let wishlist = result.rows[0].wishlist
 
         if (!wishlist[req.body.itemId]) {
@@ -11,7 +11,7 @@ const addToWishList = async (req, res) => {
             return res.json({ success: false, message: "item already in wishlist" })
         }
 
-        await pool.query("UPDATE users SET wishlist = $1 WHERE id = $2", [wishlist, req.user.id])
+        await db.query("UPDATE users SET wishlist = $1 WHERE id = $2", [wishlist, req.user.id])
         res.json({ success: true, message: "Added to wishlist" })
     } catch (error) {
         console.log(error)
@@ -22,7 +22,7 @@ const addToWishList = async (req, res) => {
 
 const removeFromWishList = async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.id]);
+        const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id]);
         let wishlist = result.rows[0].wishlist
 
         if (wishlist[req.body.itemId] === 1) {
@@ -31,7 +31,7 @@ const removeFromWishList = async (req, res) => {
             return res.json({ success: false, message: "item does not exist" })
         }
 
-        await pool.query("UPDATE users SET wishlist = $1 WHERE id = $2", [wishlist, req.user.id])
+        await db.query("UPDATE users SET wishlist = $1 WHERE id = $2", [wishlist, req.user.id])
 
 
         res.json({ success: true, wishlist })
@@ -45,7 +45,7 @@ const removeFromWishList = async (req, res) => {
 
 const getWishList = async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.id])
+        const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
         let userWishlist = result.rows[0].wishlist;
 
         console
@@ -66,10 +66,10 @@ const getWishList = async (req, res) => {
 
 const moveAllToBag = async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.id])
+        const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
         let wishlist = result.rows[0].wishlist
 
-        const cart = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.id])
+        const cart = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
 
         let userCart = cart.rows[0].cartdata;
 
@@ -85,7 +85,7 @@ const moveAllToBag = async (req, res) => {
             }
         }
 
-        await pool.query("UPDATE users SET cartdata = $1, wishlist = $2 WHERE id = $3", [userCart, {}, req.user.id])
+        await db.query("UPDATE users SET cartdata = $1, wishlist = $2 WHERE id = $3", [userCart, {}, req.user.id])
 
         res.json({ success: true, message: {} })
     } catch (error) {
