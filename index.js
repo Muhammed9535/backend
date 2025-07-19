@@ -56,6 +56,16 @@ app.get("/", (req, res) => {
     res.send("Hello there")
 })
 
+app.get("/db-test", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW()");
+    res.json({ success: true, time: result.rows[0].now });
+  } catch (err) {
+    console.error("DB connection failed", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
