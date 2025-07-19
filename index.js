@@ -23,7 +23,7 @@ pool.connect()
 app.set("trust proxy", 1);
 
 app.use(cors({
-    origin: ['https://exclusive-ecommerce-admin.onrender.com', 'https://exclusive-ecommerce-frontend.onrender.com'],
+    origin: [https://exclusive-ecommerce-frontend.onrender.com', 'https://exclusive-ecommerce-admin.onrender.com'],
     credentials: true  // Allow cookies in CORS
 }))
 
