@@ -23,7 +23,11 @@ db.connect()
 app.set("trust proxy", 1);
 
 app.use(cors({
+<<<<<<< HEAD
     origin: ["http://localhost:5173/", "http://localhost:5174/"],
+=======
+    origin: ['https://exclusive-ecommerce-frontend.onrender.com', 'https://exclusive-ecommerce-admin.onrender.com'],
+>>>>>>> a83cd197fc613f2282f217cbc57ff7756eaf29c7
     credentials: true  // Allow cookies in CORS
 }))
 
