@@ -1,10 +1,10 @@
-import db from "../config/eccormerceModel.js";
+import pool from "../config/eccormerceModel.js";
 
 
 const addToCart = async (req, res) => {
 
     try {
-        const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
+        const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.id])
         let cartData = result.rows[0].cartdata;
 
         if (!cartData[req.body.itemId]) {
@@ -13,7 +13,7 @@ const addToCart = async (req, res) => {
             cartData[req.body.itemId] += 1
         }
 
-        await db.query("UPDATE users SET cartdata = $1 WHERE id = $2", [cartData, req.user.id])
+        await pool.query("UPDATE users SET cartdata = $1 WHERE id = $2", [cartData, req.user.id])
         res.json({ success: true, message: "item added" })
     } catch (err) {
         console.log(err);
@@ -24,7 +24,7 @@ const addToCart = async (req, res) => {
 
 const removeFromCart = async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id]);
+        const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.id]);
 
         let cartData = result.rows[0].cartdata;
 
@@ -34,7 +34,7 @@ const removeFromCart = async (req, res) => {
             cartData[req.body.itemId] = ''
         }
 
-        await db.query("UPDATE users SET cartdata = $1 WHERE id = $2", [cartData, req.user.id])
+        await pool.query("UPDATE users SET cartdata = $1 WHERE id = $2", [cartData, req.user.id])
         res.json({ success: true, message: "item removed" })
 
     } catch (err) {
@@ -47,7 +47,7 @@ const removeFromCart = async (req, res) => {
 
 const getCart = async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
+        const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.id])
 
         const userCart = result.rows[0].cartdata;
 

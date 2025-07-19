@@ -1,5 +1,5 @@
 import express from 'express'
-import db from './config/eccormerceModel.js';
+import pool from './config/eccormerceModel.js';
 import session from 'express-session';
 import passport from 'passport';
 import connectPgSimple from 'connect-pg-simple';
@@ -15,15 +15,14 @@ import "dotenv/config"
 
 
 
-
 const app = express()
 const port = process.env.PORT || 3000;
-db.connect()
+pool.connect()
 
 app.set("trust proxy", 1);
 
 app.use(cors({
-   origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
     credentials: true  // Allow cookies in CORS
 }))
 
@@ -31,7 +30,7 @@ const PgSession = connectPgSimple(session);
 
 app.use(session({
     store: new PgSession({
-        db,
+        pool,
         tableName: "sessions",
     }),
     secret: process.env.SESSION_SECRET,

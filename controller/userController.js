@@ -1,5 +1,5 @@
 import isEmail from "validator/lib/isEmail.js"
-import db  from "../config/eccormerceModel.js"
+import pool from "../config/eccormerceModel.js"
 import bcrypt from 'bcryptjs'
 import passport from "passport";
 const saltRounds = 10;
@@ -16,7 +16,7 @@ const registerUser = async (req, res) => {
 
     try {
 
-        const exist = await db.query("SELECT * FROM users WHERE email = ($1)", [username])
+        const exist = await pool.query("SELECT * FROM users WHERE email = ($1)", [username])
         if (exist.rows[0]) {
             return res.json({ success: false, message: "User already exist" })
         } else {
@@ -28,7 +28,7 @@ const registerUser = async (req, res) => {
                     res.json({ success: false, message: "password must be more that 8 character" })
                 } else {
                     const hasedPassword = await bcrypt.hash(password, saltRounds)
-                    const result = await db.query("INSERT INTO users (name, email, password) VALUES ($1, $2, $3)RETURNING *", [name, username, hasedPassword]);
+                    const result = await pool.query("INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *", [name, username, hasedPassword]);
 
                     const user = result.rows[0]
 
@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
                             return err;
                         }
                         req.session.user_id = user.id
-                        const userName = await db.query("SELECT name FROM users WHERE id = $1", [req.user.id])
+                        const userName = await pool.query("SELECT name FROM users WHERE id = $1", [req.user.id])
 
                         return res.json({ success: true, sessionId: req.sessionID, message: "login successful", name: userName.rows[0].name })
                     })
@@ -67,8 +67,7 @@ const loginUser = (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            const userName = await db.query("SELECT name FROM users WHERE id = $1", [req.user.id])
-            console.log(req.session);
+            const userName = await pool.query("SELECT name FROM users WHERE id = $1", [req.user.id])
             return res.json({ success: true, sessionId: req.sessionID, message: "login successful", name: userName.rows[0].name });
         });
     })(req, res, next);

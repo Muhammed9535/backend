@@ -1,9 +1,9 @@
-import db from "../config/eccormerceModel.js"
+import pool from "../config/eccormerceModel.js"
 
 const addContact = async (req, res) => {
     const { name, email, number, message } = req.body
     try {
-        await db.query("INSERT INTO contact(name, email, number, message) VALUES ($1, $2, $3, $4)", [name, email, number, message])
+        await pool.query("INSERT INTO contact(name, email, number, message) VALUES ($1, $2, $3, $4)", [name, email, number, message])
         res.json({ success: true, message: "message added" })
     } catch (error) {
         console.log(error)
@@ -15,7 +15,7 @@ const addContact = async (req, res) => {
 
 const getAllContact = async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM contact")
+        const result = await pool.query("SELECT * FROM contact")
         res.json({ success: true, message: result.rows })
     } catch (error) {
         console.log(error);

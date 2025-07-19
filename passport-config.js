@@ -9,7 +9,6 @@ import { Strategy as LocalStrategy } from 'passport-local';
 
 const configurePassport = () => {
     passport.use(new LocalStrategy(async function verify(username, password, done) {
-        console.log("passport is triggered")
 
         try {
             const loginUser = await pool.query("SELECT * FROM users WHERE email = $1", [username]);
@@ -27,7 +26,6 @@ const configurePassport = () => {
                 return done(null, false, { message: "User not found" });
             }
         } catch (error) {
-            console.log(error)
             return done(error);
         }
     }))
@@ -46,7 +44,6 @@ passport.deserializeUser(async (id, done) => {
         if (result.rows[0].length === 0) {
             return done(new Error("User not found"))
         }
-        console.log("passport deserialize")
         done(null, result.rows[0])
     } catch (error) {
         return done(error)
